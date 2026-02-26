@@ -1,0 +1,51 @@
+# =============================================================
+# Prometheus Alert Rules — OmniNode
+# =============================================================
+
+groups:
+
+  - name: node_alerts
+    rules:
+
+      # Ethereum node down
+      - alert: EthereumNodeDown
+        expr: up{job="ethereum"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Ethereum node is down"
+          description: "Ethereum Geth node has been unreachable for more than 2 minutes."
+
+      # Bitcoin node down
+      - alert: BitcoinNodeDown
+        expr: up{job="bitcoin"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Bitcoin node is down"
+          description: "Bitcoin Core node has been unreachable for more than 2 minutes."
+
+      # Prometheus down
+      - alert: PrometheusDown
+        expr: up{job="prometheus"} == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Prometheus is down"
+          description: "Prometheus monitoring has stopped."
+
+  - name: sync_alerts
+    rules:
+
+      # Ethereum not syncing peers
+      - alert: EthereumNoPeers
+        expr: ethereum_p2p_peers == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ethereum node has no peers"
+          description: "Ethereum node has had 0 peers for more than 5 minutes."

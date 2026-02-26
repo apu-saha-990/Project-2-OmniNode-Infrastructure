@@ -165,3 +165,9 @@ logs/*.log
 # OS
 .DS_Store
 Thumbs.db
+
+# Blockchain data — never commit
+docker/bitcoin/data/*
+docker/ethereum/data/*
+!docker/bitcoin/data/.gitkeep
+!docker/ethereum/data/.gitkeep
