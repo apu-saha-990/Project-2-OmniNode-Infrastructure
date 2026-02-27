@@ -81,7 +81,7 @@
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "green", "value": 0.99 } ] },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 0.1 }, { "color": "green", "value": 0.99 } ] },
           "unit": "percentunit",
           "min": 0,
           "max": 1
@@ -148,17 +148,115 @@
     },
     {
       "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
-      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "bytes" } },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 13 },
       "id": 13,
       "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "Ethereum P2P Network Traffic",
+      "type": "timeseries",
+      "targets": [
+        { "expr": "p2p_ingress{job=\"ethereum\"}", "legendFormat": "Ingress", "refId": "A" },
+        { "expr": "p2p_egress{job=\"ethereum\"}", "legendFormat": "Egress", "refId": "B" }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+      "id": 102,
+      "title": "Ethereum — Sepolia Testnet",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "yellow", "value": 1 }, { "color": "green", "value": 5 } ] },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 22 },
+      "id": 14,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "title": "Ethereum Outbound Peers",
+      "type": "stat",
+      "targets": [ { "expr": "p2p_peers_outbound{job=\"ethereum\"}", "legendFormat": "Outbound", "refId": "A" } ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "yellow", "value": 5 } ] },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 22 },
+      "id": 15,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "title": "Ethereum Dial Errors",
+      "type": "stat",
+      "targets": [ { "expr": "p2p_dials_error_other{job=\"ethereum\"} + p2p_dials_error_rlpx_enc{job=\"ethereum\"}", "legendFormat": "Errors", "refId": "A" } ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 22 },
+      "id": 16,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+      "title": "Ethereum Successful Dials",
+      "type": "stat",
+      "targets": [ { "expr": "p2p_dials_success{job=\"ethereum\"}", "legendFormat": "Dials", "refId": "A" } ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 22 },
+      "id": 17,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
       "title": "Ethereum Chain Head Block",
+      "type": "stat",
+      "targets": [ { "expr": "chain_head_block{job=\"ethereum\"}", "legendFormat": "Block", "refId": "A" } ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+      "id": 18,
+      "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "Ethereum Peer Connections Over Time",
+      "type": "timeseries",
+      "targets": [
+        { "expr": "p2p_peers{job=\"ethereum\"}", "legendFormat": "Total Peers", "refId": "A" },
+        { "expr": "p2p_peers_outbound{job=\"ethereum\"}", "legendFormat": "Outbound", "refId": "B" },
+        { "expr": "p2p_peers_inbound{job=\"ethereum\"}", "legendFormat": "Inbound", "refId": "C" }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
+      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+      "id": 19,
+      "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
+      "title": "Ethereum Chain Head Over Time",
       "type": "timeseries",
       "targets": [ { "expr": "chain_head_block{job=\"ethereum\"}", "legendFormat": "Block Height", "refId": "A" } ]
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
       "id": 101,
       "title": "Monitoring Stack Health",
       "type": "row"
@@ -172,7 +270,7 @@
           "mappings": [ { "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } }, "type": "value" } ]
         }
       },
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 22 },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 35 },
       "id": 7,
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
       "title": "Prometheus Status",
@@ -182,7 +280,7 @@
     {
       "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "s" } },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 39 },
       "id": 8,
       "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
       "title": "Prometheus Scrape Duration",
@@ -192,7 +290,7 @@
     {
       "datasource": { "type": "prometheus", "uid": "omninode-prometheus" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" } },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 39 },
       "id": 9,
       "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } },
       "title": "Prometheus Scrape Samples",
@@ -208,5 +306,5 @@
   "timezone": "browser",
   "title": "OmniNode — Blockchain Infrastructure",
   "uid": "omninode-main",
-  "version": 2
+  "version": 3
 }
