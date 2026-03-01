@@ -37,6 +37,8 @@ declare -A PORTS=(
   ["Prometheus"]="$PROMETHEUS_PORT"
   ["Grafana"]="$GRAFANA_PORT"
   ["Alertmanager"]="$ALERTMANAGER_PORT"
+  ["Lighthouse P2P"]="9000"
+  ["Lighthouse HTTP"]="5052"
 )
 
 CONFLICTS=0
