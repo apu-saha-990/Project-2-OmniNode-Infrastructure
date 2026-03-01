@@ -44,7 +44,7 @@ echo ""
 # -------------------------------------------------------------
 # Backup configs
 # -------------------------------------------------------------
-echo -e "${BOLD}[1/4] Backing up configuration files...${NC}"
+echo -e "${BOLD}[1/5] Backing up configuration files...${NC}"
 mkdir -p "$BACKUP_PATH/configs"
 cp "$ROOT_DIR/docker-compose.yml" "$BACKUP_PATH/configs/"
 cp "$ROOT_DIR/.env.example" "$BACKUP_PATH/configs/"
@@ -53,13 +53,12 @@ cp -r "$ROOT_DIR/monitoring" "$BACKUP_PATH/configs/monitoring"
 echo -e "  ${GREEN}✓ Configs backed up${NC}"
 
 # -------------------------------------------------------------
-# Backup Bitcoin data snapshot
+# Backup Bitcoin state
 # -------------------------------------------------------------
-echo -e "${BOLD}[2/4] Backing up Bitcoin node state...${NC}"
+echo -e "${BOLD}[2/5] Backing up Bitcoin node state...${NC}"
 mkdir -p "$BACKUP_PATH/bitcoin"
 
 if docker ps --format '{{.Names}}' | grep -q "^omninode-bitcoin$"; then
-  # Save wallet and chainstate only — not full blocks (pruned anyway)
   docker exec omninode-bitcoin bitcoin-cli \
     -rpcuser="$BTC_RPC_USER" \
     -rpcpassword="$BTC_RPC_PASS" \
@@ -78,11 +77,10 @@ fi
 # -------------------------------------------------------------
 # Backup Ethereum state
 # -------------------------------------------------------------
-echo -e "${BOLD}[3/4] Backing up Ethereum node state...${NC}"
+echo -e "${BOLD}[3/5] Backing up Ethereum node state...${NC}"
 mkdir -p "$BACKUP_PATH/ethereum"
 
 if docker ps --format '{{.Names}}' | grep -q "^omninode-ethereum$"; then
-  # Save sync status and peer info via RPC
   curl -s -X POST \
     -H "Content-Type: application/json" \
     --data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}' \
@@ -93,15 +91,39 @@ if docker ps --format '{{.Names}}' | grep -q "^omninode-ethereum$"; then
     --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' \
     "http://localhost:$ETH_HTTP_PORT" > "$BACKUP_PATH/ethereum/peercount.json" 2>/dev/null || true
 
+  docker exec omninode-ethereum geth attach \
+    --exec "admin.nodeInfo.enode" /data/geth.ipc > "$BACKUP_PATH/ethereum/enode.txt" 2>/dev/null || true
+
   echo -e "  ${GREEN}✓ Ethereum state snapshot saved${NC}"
 else
   echo -e "  ${YELLOW}⚠ Ethereum container not running — skipping state snapshot${NC}"
 fi
 
 # -------------------------------------------------------------
+# Backup Lighthouse state
+# -------------------------------------------------------------
+echo -e "${BOLD}[4/5] Backing up Lighthouse beacon state...${NC}"
+mkdir -p "$BACKUP_PATH/lighthouse"
+
+if docker ps --format '{{.Names}}' | grep -q "^omninode-lighthouse$"; then
+  curl -s http://localhost:5052/eth/v1/node/identity \
+    > "$BACKUP_PATH/lighthouse/identity.json" 2>/dev/null || true
+
+  curl -s http://localhost:5052/eth/v1/node/syncing \
+    > "$BACKUP_PATH/lighthouse/syncing.json" 2>/dev/null || true
+
+  curl -s http://localhost:5052/eth/v1/node/peers \
+    > "$BACKUP_PATH/lighthouse/peers.json" 2>/dev/null || true
+
+  echo -e "  ${GREEN}✓ Lighthouse state snapshot saved${NC}"
+else
+  echo -e "  ${YELLOW}⚠ Lighthouse container not running — skipping${NC}"
+fi
+
+# -------------------------------------------------------------
 # Backup Grafana dashboards
 # -------------------------------------------------------------
-echo -e "${BOLD}[4/4] Backing up Grafana dashboards...${NC}"
+echo -e "${BOLD}[5/5] Backing up Grafana dashboards...${NC}"
 mkdir -p "$BACKUP_PATH/grafana"
 cp -r "$ROOT_DIR/monitoring/grafana" "$BACKUP_PATH/grafana/" 2>/dev/null || true
 echo -e "  ${GREEN}✓ Grafana dashboards backed up${NC}"
@@ -114,14 +136,15 @@ cat > "$BACKUP_PATH/manifest.json" << MANIFEST
   "timestamp": "$TIMESTAMP",
   "backup_path": "$BACKUP_PATH",
   "contents": [
-    "configs/docker-compose.yml",
-    "configs/.env.example",
-    "configs/bitcoin.conf",
-    "configs/monitoring/",
+    "configs/",
     "bitcoin/chaininfo.json",
     "bitcoin/networkinfo.json",
     "ethereum/syncstatus.json",
     "ethereum/peercount.json",
+    "ethereum/enode.txt",
+    "lighthouse/identity.json",
+    "lighthouse/syncing.json",
+    "lighthouse/peers.json",
     "grafana/"
   ]
 }
