@@ -1,0 +1,12 @@
+# =============================================================
+# OmniNode — Terraform Variable Values
+# Copy to terraform.tfvars and fill in your values
+# cp terraform.tfvars.example terraform.tfvars
+# =============================================================
+
+do_token       = "your_digitalocean_api_token_here"
+ssh_public_key = "ssh-rsa AAAA... your_public_key_here"
+region         = "lon1"
+droplet_size   = "s-2vcpu-4gb"
+volume_size_gb = 100
+github_repo    = "artcelltarafder-pixel/omninode-infrastructure"
