@@ -9,23 +9,23 @@ groups:
 
       # Ethereum node down
       - alert: EthereumNodeDown
-        expr: up{job="ethereum"} == 0
-        for: 2m
+        expr: absent(p2p_peers)
+        for: 30s
         labels:
           severity: critical
         annotations:
           summary: "Ethereum node is down"
-          description: "Ethereum Geth node has been unreachable for more than 2 minutes."
+          description: "Ethereum Geth node has been unreachable for more than 30 seconds."
 
       # Bitcoin node down
       - alert: BitcoinNodeDown
-        expr: up{job="bitcoin"} == 0
-        for: 2m
+        expr: bitcoin_up == 0
+        for: 30s
         labels:
           severity: critical
         annotations:
           summary: "Bitcoin node is down"
-          description: "Bitcoin Core node has been unreachable for more than 2 minutes."
+          description: "Bitcoin Core node has been unreachable for more than 30 seconds."
 
       # Prometheus down
       - alert: PrometheusDown
@@ -42,7 +42,7 @@ groups:
 
       # Ethereum not syncing peers
       - alert: EthereumNoPeers
-        expr: ethereum_p2p_peers == 0
+        expr: p2p_peers == 0
         for: 5m
         labels:
           severity: warning

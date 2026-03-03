@@ -27,7 +27,7 @@ route:
 receivers:
   - name: 'discord'
     webhook_configs:
-      - url: 'https://discord.com/api/webhooks/placeholder/placeholder'
+      - url: 'http://omninode-discord-proxy:9094'
         send_resolved: true
 
 inhibit_rules:

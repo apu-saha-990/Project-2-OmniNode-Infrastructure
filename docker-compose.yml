@@ -144,6 +144,21 @@ services:
     networks:
       - omninode
 
+  discord-proxy:
+    image: python:3.11-slim
+    container_name: omninode-discord-proxy
+    restart: unless-stopped
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    ports:
+      - "9094:9094"
+    command: >
+      sh -c "pip install flask requests --quiet && python3 /app/discord_bridge.py"
+    volumes:
+      - ./scripts/discord_bridge.py:/app/discord_bridge.py:ro
+    networks:
+      - omninode
+      
 networks:
   omninode:
     driver: bridge
