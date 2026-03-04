@@ -80,6 +80,7 @@ print_usage() {
   echo -e "  ./omninode.sh logs ethereum"
   echo -e "  ./omninode.sh health"
   echo -e "  ./omninode.sh health-watch"
+  echo -e "  ./omninode.sh logs-export"
   echo ""
 }
 
@@ -150,6 +151,8 @@ cmd_stop() {
 
   case "$TARGET" in
     all)
+      echo -e "${BOLD}→ Exporting logs before shutdown...${NC}"
+      bash "$SCRIPT_DIR/logs-export.sh"
       docker compose -f "$ROOT_DIR/docker-compose.yml" down
       ;;
     bitcoin)
@@ -339,6 +342,7 @@ case "$COMMAND" in
   logs)      cmd_logs "$TARGET" ;;
   resources) bash "$SCRIPT_DIR/resource-manager.sh" ;;
   health-watch) bash "$SCRIPT_DIR/health-watch.sh" ;;
+  logs-export) bash "$SCRIPT_DIR/logs-export.sh" ;;
   help|--help|-h) print_header; print_usage ;;
   *)
     echo -e "${RED}Unknown command: $COMMAND${NC}"
