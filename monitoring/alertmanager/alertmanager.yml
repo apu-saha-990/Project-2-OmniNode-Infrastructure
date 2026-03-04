@@ -24,6 +24,12 @@ route:
       receiver: 'discord'
       repeat_interval: 6h
 
+    - match:
+        severity: info
+      receiver: 'discord'
+      group_wait: 10s
+      repeat_interval: 6h
+
 receivers:
   - name: 'discord'
     webhook_configs:

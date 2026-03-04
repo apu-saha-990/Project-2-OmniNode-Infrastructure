@@ -7,6 +7,26 @@ groups:
   - name: node_alerts
     rules:
 
+      # Bitcoin node down — exporter reporting 0
+      - alert: BitcoinNodeDown
+        expr: bitcoin_up == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Bitcoin node is down"
+          description: "Bitcoin Core node has been unreachable for more than 30 seconds."
+
+      # Bitcoin exporter itself has disappeared
+      - alert: BitcoinExporterMissing
+        expr: absent(bitcoin_up)
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Bitcoin exporter is missing"
+          description: "Bitcoin exporter container has stopped — no metrics being reported."
+
       # Ethereum node down
       - alert: EthereumNodeDown
         expr: absent(p2p_peers)
@@ -17,15 +37,25 @@ groups:
           summary: "Ethereum node is down"
           description: "Ethereum Geth node has been unreachable for more than 30 seconds."
 
-      # Bitcoin node down
-      - alert: BitcoinNodeDown
-        expr: bitcoin_up == 0
+      # Lighthouse beacon client down
+      - alert: LighthouseDown
+        expr: up{job="lighthouse"} == 0
         for: 30s
         labels:
           severity: critical
         annotations:
-          summary: "Bitcoin node is down"
-          description: "Bitcoin Core node has been unreachable for more than 30 seconds."
+          summary: "Lighthouse beacon client is down"
+          description: "Lighthouse beacon client has been unreachable for more than 30 seconds."
+
+      # Grafana down
+      - alert: GrafanaDown
+        expr: up{job="grafana"} == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Grafana dashboard is down"
+          description: "Grafana has been unreachable for more than 30 seconds."
 
       # Prometheus down
       - alert: PrometheusDown
@@ -49,3 +79,16 @@ groups:
         annotations:
           summary: "Ethereum node has no peers"
           description: "Ethereum node has had 0 peers for more than 5 minutes."
+
+  - name: watchdog
+    rules:
+
+      # Watchdog — fires constantly as heartbeat
+      # If Discord goes silent, monitoring stack has died
+      - alert: Watchdog
+        expr: vector(1)
+        labels:
+          severity: info
+        annotations:
+          summary: "OmniNode monitoring is alive"
+          description: "This is a heartbeat alert. If this stops appearing, the monitoring stack is down."
