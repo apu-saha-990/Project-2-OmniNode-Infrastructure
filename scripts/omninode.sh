@@ -79,6 +79,7 @@ print_usage() {
   echo -e "  ./omninode.sh status"
   echo -e "  ./omninode.sh logs ethereum"
   echo -e "  ./omninode.sh health"
+  echo -e "  ./omninode.sh health-watch"
   echo ""
 }
 
@@ -337,6 +338,7 @@ case "$COMMAND" in
   health)   cmd_health ;;
   logs)      cmd_logs "$TARGET" ;;
   resources) bash "$SCRIPT_DIR/resource-manager.sh" ;;
+  health-watch) bash "$SCRIPT_DIR/health-watch.sh" ;;
   help|--help|-h) print_header; print_usage ;;
   *)
     echo -e "${RED}Unknown command: $COMMAND${NC}"
