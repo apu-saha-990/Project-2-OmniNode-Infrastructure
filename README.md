@@ -17,7 +17,7 @@ A simple operator toolkit for running Bitcoin and Ethereum nodes together on one
 - Exports container logs on shutdown (keeps last 10 sessions)
 - Provisions a basic cloud server with Terraform (DigitalOcean)
 - Configures a fresh machine end-to-end with Ansible (Docker, firewall, systemd)
-- Includes Kubernetes manifests for future expansion (separate repo)
+- Includes Kubernetes manifests for running the full stack on a local minikube cluster
 
 ---
 
@@ -52,7 +52,7 @@ I made every architectural call: running testnet instead of mainnet (same softwa
 - Prometheus uses container names in scrape config, not IP addresses — Docker's internal DNS handles resolution
 - Grafana datasource UIDs must match exactly between the dashboard JSON and the provisioning config — a mismatch causes "No Data" with no obvious error message
 - `docker-compose.override.yml` merges automatically with the base compose file — useful for injecting resource limits without touching the base config
-- Ansible's `--check` flag runs the full playbook dry — the only expected failure is git clone, because the repo is private
+- Ansible's `--check` flag runs the full playbook dry — the only expected failure is git clone, because the repo was private
 
 ---
 
@@ -119,6 +119,35 @@ terraform plan -var="do_token=dummy_token" -var="ssh_public_key=ssh-rsa AAAAB3Nz
 ansible-playbook -i ansible/inventory-local.ini ansible/playbooks/setup.yml --check
 ```
 
+### Kubernetes
+
+Full install and deploy guide is in `kubernetes/COMMANDS.md`. Quick start:
+
+```bash
+# Start minikube
+minikube start --driver=docker --cpus=4 --memory=8192
+
+# Deploy full stack
+kubectl apply -f kubernetes/namespace.yml
+kubectl apply -f kubernetes/configmap.yml
+kubectl apply -f kubernetes/secrets.yml
+kubectl apply -f kubernetes/persistent-volumes.yml
+kubectl apply -f kubernetes/bitcoin-deployment.yml
+kubectl apply -f kubernetes/ethereum-deployment.yml
+kubectl apply -f kubernetes/lighthouse-deployment.yml
+kubectl apply -f kubernetes/monitoring-deployment.yml
+
+# Required after deploy
+kubectl create configmap prometheus-config \
+  --from-file=prometheus.yml=monitoring/prometheus/prometheus.yml \
+  --from-file=alerts.yml=monitoring/prometheus/alerts.yml \
+  -n omninode
+kubectl rollout restart deployment/prometheus -n omninode
+
+# Verify
+kubectl get pods -n omninode
+```
+
 ---
 
 ## Tech Stack
@@ -128,7 +157,7 @@ ansible-playbook -i ansible/inventory-local.ini ansible/playbooks/setup.yml --ch
 | Blockchain Nodes | Bitcoin Core (lncm/bitcoind:v25.0), Geth (ethereum/client-go:stable) |
 | Consensus Layer | Lighthouse (sigp/lighthouse:latest) |
 | Containerisation | Docker + Docker Compose |
-| Orchestration | Kubernetes (separate repo) |
+| Orchestration | Kubernetes — minikube (kubernetes/) |
 | Infrastructure as Code | Terraform — DigitalOcean provider |
 | Config Management | Ansible |
 | Metrics | Prometheus + custom Bitcoin exporter |
@@ -147,6 +176,7 @@ Key folders:
 - `monitoring/` — Prometheus config, alert rules, Grafana provisioning and dashboards
 - `terraform/` — DigitalOcean infrastructure definitions
 - `ansible/` — server provisioning playbook
+- `kubernetes/` — 8 manifests for minikube deployment + COMMANDS.md
 
 Full layout is in the architecture diagram.
 
