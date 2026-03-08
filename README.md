@@ -87,7 +87,7 @@ rpcbind=0.0.0.0
 
 ```bash
 # Clone and enter
-git clone https://github.com/artcelltarafder-pixel/omninode-infrastructure.git
+git clone https://github.com/apu-saha-990/Project02-omninode-infrastructure.git
 cd omninode-infrastructure
 
 # Run setup (interactive or automatic)

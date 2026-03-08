@@ -10,7 +10,7 @@
   become: true
   vars:
     omninode_dir: /opt/omninode
-    github_repo: artcelltarafder-pixel/omninode-infrastructure
+    github_repo: apu-saha-990/Project02-omninode-infrastructure
 
   tasks:
 

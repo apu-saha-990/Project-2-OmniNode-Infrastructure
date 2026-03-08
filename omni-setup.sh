@@ -26,7 +26,7 @@ CURRENT_STEP=0
 # =============================================================
 # HARDCODED CONFIG — AUTO MODE
 # =============================================================
-HARDCODED_REPO="https://github.com/artcelltarafder-pixel/omninode-infrastructure.git"
+HARDCODED_REPO="https://github.com/apu-saha-990/Project02-omninode-infrastructure.git"
 DEFAULT_INSTALL_DIR="$HOME/omninode-infrastructure"
 
 # =============================================================

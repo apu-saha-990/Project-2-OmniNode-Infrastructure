@@ -9,4 +9,4 @@ ssh_public_key = "ssh-rsa AAAA... your_public_key_here"
 region         = "lon1"
 droplet_size   = "s-2vcpu-4gb"
 volume_size_gb = 100
-github_repo    = "artcelltarafder-pixel/omninode-infrastructure"
+github_repo    = "apu-saha-990/Project02-omninode-infrastructure"

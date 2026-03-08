@@ -34,5 +34,5 @@ variable "volume_size_gb" {
 variable "github_repo" {
   description = "GitHub repo to clone — format: username/repo"
   type        = string
-  default     = "artcelltarafder-pixel/omninode-infrastructure"
+  default     = "apu-saha-990/Project02-omninode-infrastructure"
 }
