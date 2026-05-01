@@ -181,16 +181,25 @@ kubectl get pods -n omninode
 
 ## What's Next
 
-- Add mainnet support alongside testnet — same config, just pointing at real networks
-- Automate secret rotation — regenerate the shared authentication key and restart affected containers in one command, no manual steps
-- Centralise all container logs into one place with 90-day retention — so nothing gets lost and everything is searchable
-- Lock down containers — run as non-root, restrict what each container can access on the host, no unnecessary permissions
-- Add a security compliance check to the build pipeline — automatically flag containers that don't meet baseline hardening standards before they deploy
-- Separate the network traffic — nodes talk to nodes, monitoring talks to monitoring, management stays on its own lane
-- Alert when disk hits 80% on blockchain data storage — before it becomes a problem, not after
-- Build a simple health endpoint that returns structured data — so external tools can check node status without needing direct access
-- Add an audit log — every command run against the stack gets recorded with a timestamp, no exceptions
-- Test backups automatically on a schedule — a backup that has never been restored is not a backup
+- **Mainnet support** — the nodes currently run on test networks. Pointing them at real networks is the next step toward a deployment that could support a live operation rather than a demo environment.
+
+- **Automated secret rotation** — the shared authentication key between the two Ethereum components currently requires a manual process to rotate. Automating that — regenerate, redistribute, restart — removes a step that is easy to forget and easy to get wrong.
+
+- **Centralised log storage with 90-day retention** — right now logs live inside individual containers and disappear when a container restarts. Pulling everything into one place with a fixed retention window means nothing gets lost and everything is searchable — a basic requirement for any environment where you need to reconstruct what happened and when.
+
+- **Container hardening** — containers currently run with more permissions than they need. Locking them down — removing root access, restricting what each container can touch on the host — reduces the damage an attacker can do if one container is compromised.
+
+- **Security compliance checks in the build pipeline** — automatically flag containers that don't meet baseline security standards before they deploy, not after. Catches problems at the door rather than in production.
+
+- **Network separation** — nodes talk to nodes, monitoring talks to monitoring, management stays on its own lane. Mixing them is a risk. Separating them means a problem in one layer can't move sideways into another.
+
+- **Disk alert at 80% capacity** — blockchain data grows continuously. An alert at 80% gives enough time to act before the node runs out of space and stops. Finding out at 100% is too late.
+
+- **Health endpoint** — a simple status check that external tools can query without needing direct access to the stack. Useful for integrating into a broader monitoring environment without exposing internal systems.
+
+- **Audit logging** — every command run against the stack recorded with a timestamp. No exceptions. In any environment where you need to account for who did what and when, this is not optional.
+
+- **Automated backup testing** — backups run on a schedule but are never tested. A backup that has never been restored is not a backup. Automated restore tests confirm recovery actually works before it's needed.
 
 ---
 
