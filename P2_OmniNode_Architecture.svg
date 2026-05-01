@@ -1,0 +1,337 @@
+<svg width="100%" viewBox="0 0 980 1400" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Project 02 – OmniNode Infrastructure Manager Architecture</title>
+<desc>White and navy architecture diagram for OmniNode – Bitcoin + Ethereum, 9 containers, full observability.</desc>
+<rect x="0" y="0" width="980" height="1400" fill="#ffffff"/>
+
+<!-- TITLE BAR -->
+<rect x="0" y="0" width="980" height="38" fill="#1a2e4a"/>
+<text x="16" y="24" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#ffffff">PROJECT 02 — OMNINODE INFRASTRUCTURE MANAGER // ARCHITECTURE</text>
+<text x="964" y="24" font-family="Arial, sans-serif" font-size="9" fill="#93c5fd" text-anchor="end">Bitcoin + Ethereum · 9 Containers · Full Observability</text>
+
+<!-- ═══ SECTION 1: BLOCKCHAIN NODES ═══ -->
+<text x="16" y="54" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">BLOCKCHAIN NODES — 4 CONTAINERS</text>
+<rect x="8" y="60" width="964" height="148" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- Bitcoin Core -->
+<rect x="16" y="68" width="228" height="132" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="16" y="68" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="16" y="76" width="228" height="10" fill="#1a2e4a"/>
+<text x="130" y="80" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">BITCOIN CORE</text>
+<text x="26" y="97" font-family="Arial, sans-serif" font-size="7" fill="#64748b">bitcoin/bitcoin:25.0 · Bitcoin Testnet</text>
+<text x="26" y="110" font-family="Arial, sans-serif" font-size="7" fill="#334155">- P2P :8333</text>
+<text x="26" y="122" font-family="Arial, sans-serif" font-size="7" fill="#334155">- RPC :8332</text>
+<text x="26" y="134" font-family="Arial, sans-serif" font-size="7" fill="#334155">- ZMQ :28332 – Project 3 mempool</text>
+<text x="26" y="146" font-family="Arial, sans-serif" font-size="7" fill="#334155">- testnet4 under [test] section</text>
+<text x="26" y="158" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Testnet syncs hours vs mainnet weeks</text>
+<text x="80" y="188" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:8332 · :8333 · :28332</text>
+
+<!-- Bitcoin Exporter -->
+<rect x="252" y="68" width="228" height="132" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="252" y="68" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="252" y="76" width="228" height="10" fill="#1a2e4a"/>
+<text x="366" y="80" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">BITCOIN EXPORTER</text>
+<text x="262" y="97" font-family="Arial, sans-serif" font-size="7" fill="#64748b">python:3.11-slim · Sidecar container</text>
+<text x="262" y="110" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Queries Bitcoin Core RPC</text>
+<text x="262" y="122" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Exposes Prometheus /metrics :9332</text>
+<text x="262" y="134" font-family="Arial, sans-serif" font-size="7" fill="#334155">- bitcoin_blocks, bitcoin_headers</text>
+<text x="262" y="146" font-family="Arial, sans-serif" font-size="7" fill="#334155">- bitcoin_peers, bitcoin_mempool_size</text>
+<text x="262" y="158" font-family="Arial, sans-serif" font-size="7" fill="#334155">- bitcoin_verification_progress</text>
+<text x="316" y="188" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:9332 (Prometheus scrape target)</text>
+
+<!-- Geth Ethereum -->
+<rect x="488" y="68" width="228" height="132" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="488" y="68" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="488" y="76" width="228" height="10" fill="#1a2e4a"/>
+<text x="602" y="80" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">GETH (ETHEREUM)</text>
+<text x="498" y="97" font-family="Arial, sans-serif" font-size="7" fill="#64748b">ethereum/client-go:stable · Sepolia</text>
+<text x="498" y="110" font-family="Arial, sans-serif" font-size="7" fill="#334155">- P2P :30303</text>
+<text x="498" y="122" font-family="Arial, sans-serif" font-size="7" fill="#334155">- RPC :8545</text>
+<text x="498" y="134" font-family="Arial, sans-serif" font-size="7" fill="#334155">- WebSocket :8546 – Project 3</text>
+<text x="498" y="146" font-family="Arial, sans-serif" font-size="7" fill="#334155">- syncmode snap (not light/archive)</text>
+<text x="498" y="158" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Engine API on :8551</text>
+<text x="552" y="188" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:8545 · :8546 · :30303</text>
+
+<!-- Lighthouse -->
+<rect x="724" y="68" width="240" height="132" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="724" y="68" width="240" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="724" y="76" width="240" height="10" fill="#1a2e4a"/>
+<text x="844" y="80" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">LIGHTHOUSE</text>
+<text x="734" y="97" font-family="Arial, sans-serif" font-size="7" fill="#64748b">sigp/lighthouse:latest · Beacon</text>
+<text x="734" y="110" font-family="Arial, sans-serif" font-size="7" fill="#334155">- P2P :9000</text>
+<text x="734" y="122" font-family="Arial, sans-serif" font-size="7" fill="#334155">- HTTP API :5052</text>
+<text x="734" y="134" font-family="Arial, sans-serif" font-size="7" fill="#334155">- JWT secret shared with Geth</text>
+<text x="734" y="146" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Checkpoint sync from sepolia.beaconstate.info</text>
+<text x="734" y="158" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Consensus layer for Geth EL</text>
+<text x="784" y="188" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:5052 · :9000</text>
+
+<!-- ═══ SECTION 2: OBSERVABILITY STACK ═══ -->
+<text x="16" y="224" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">OBSERVABILITY STACK — 4 CONTAINERS</text>
+<rect x="8" y="230" width="964" height="158" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- Prometheus -->
+<rect x="16" y="238" width="228" height="142" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="16" y="238" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="16" y="246" width="228" height="10" fill="#1a2e4a"/>
+<text x="130" y="250" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">PROMETHEUS</text>
+<text x="26" y="267" font-family="Arial, sans-serif" font-size="7" fill="#64748b">prom/prometheus:latest</text>
+<text x="26" y="280" font-family="Arial, sans-serif" font-size="7" fill="#334155">- 4 scrape targets configured</text>
+<text x="26" y="292" font-family="Arial, sans-serif" font-size="7" fill="#334155">- bitcoin-exporter :9332</text>
+<text x="26" y="304" font-family="Arial, sans-serif" font-size="7" fill="#334155">- geth internal metrics :6060</text>
+<text x="26" y="316" font-family="Arial, sans-serif" font-size="7" fill="#334155">- lighthouse :9054</text>
+<text x="26" y="328" font-family="Arial, sans-serif" font-size="7" fill="#334155">- node-exporter :9100</text>
+<text x="26" y="340" font-family="Arial, sans-serif" font-size="7" fill="#334155">- 6 alert rules · scrape: 15s</text>
+<text x="80" y="372" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:9090</text>
+
+<!-- Grafana -->
+<rect x="252" y="238" width="228" height="142" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="252" y="238" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="252" y="246" width="228" height="10" fill="#1a2e4a"/>
+<text x="366" y="250" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">GRAFANA</text>
+<text x="262" y="267" font-family="Arial, sans-serif" font-size="7" fill="#64748b">grafana/grafana:latest</text>
+<text x="262" y="280" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Auto-provisioned on startup</text>
+<text x="262" y="292" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Datasource UID: omninode-prometheus</text>
+<text x="262" y="304" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Dashboard JSON auto-loaded – fires alerts</text>
+<text x="262" y="316" font-family="Arial, sans-serif" font-size="7" fill="#334155">- No manual import ever needed</text>
+<text x="262" y="328" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Provisioning via mounted configs</text>
+<text x="262" y="340" font-family="Arial, sans-serif" font-size="7" fill="#334155">- localhost:3000</text>
+<text x="316" y="372" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:3000</text>
+
+<!-- Alertmanager -->
+<rect x="488" y="238" width="228" height="142" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="488" y="238" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="488" y="246" width="228" height="10" fill="#1a2e4a"/>
+<text x="602" y="250" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">ALERTMANAGER</text>
+<text x="498" y="267" font-family="Arial, sans-serif" font-size="7" fill="#64748b">prom/alertmanager:latest</text>
+<text x="498" y="280" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Alert routing + inhibition rules</text>
+<text x="498" y="292" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Critical alerts: repeat every 1h</text>
+<text x="498" y="304" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Warning alerts: repeat every 6h</text>
+<text x="498" y="316" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Critical suppresses warning (inhibition rule)</text>
+<text x="498" y="328" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Routes: discord-proxy :9094</text>
+<text x="552" y="372" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:9093</text>
+
+<!-- Discord Proxy -->
+<rect x="724" y="238" width="240" height="142" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="724" y="238" width="240" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="724" y="246" width="240" height="10" fill="#1a2e4a"/>
+<text x="844" y="250" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">DISCORD PROXY</text>
+<text x="734" y="267" font-family="Arial, sans-serif" font-size="7" fill="#64748b">python:3.11-slim · Flask</text>
+<text x="734" y="280" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Custom Alertmanager webhook bridge</text>
+<text x="734" y="292" font-family="Arial, sans-serif" font-size="7" fill="#334155">- ~40 lines – fully controlled stack</text>
+<text x="734" y="304" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Receives raw Alertmanager payload</text>
+<text x="734" y="316" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Reformats to Discord embed format</text>
+<text x="734" y="328" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Env var webhook handled in Flask</text>
+<text x="734" y="340" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Built: third-party images had bugs</text>
+<text x="784" y="372" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">:9094</text>
+
+<!-- ═══ SECTION 3: INFRASTRUCTURE AS CODE ═══ -->
+<text x="16" y="404" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">INFRASTRUCTURE AS CODE · CI/CD · ORCHESTRATION</text>
+<rect x="8" y="410" width="964" height="168" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- Terraform -->
+<rect x="16" y="418" width="228" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="16" y="418" width="228" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="16" y="426" width="228" height="10" fill="#1a2e4a"/>
+<text x="130" y="430" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">TERRAFORM</text>
+<text x="26" y="447" font-family="Arial, sans-serif" font-size="7" fill="#64748b">Infrastructure as Code · DigitalOcean · terraform/</text>
+<text x="26" y="460" font-family="Arial, sans-serif" font-size="7" fill="#334155">- digitalocean_droplet – Ubuntu 22.04, 2vCPU/4GB, London</text>
+<text x="26" y="472" font-family="Arial, sans-serif" font-size="7" fill="#334155">- digitalocean_firewall – 13 ports open, all outbound allowed</text>
+<text x="26" y="484" font-family="Arial, sans-serif" font-size="7" fill="#334155">- digitalocean_ssh_key – SSH key for server access</text>
+<text x="26" y="496" font-family="Arial, sans-serif" font-size="7" fill="#334155">- digitalocean_volume – 100GB persistent blockchain storage</text>
+<text x="26" y="508" font-family="Arial, sans-serif" font-size="7" fill="#334155">- digitalocean_volume_attachment – attaches volume to droplet</text>
+<rect x="26" y="516" width="200" height="1" fill="#e2e8f0"/>
+<text x="26" y="528" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">5 resources · terraform init → plan → apply</text><text x="26" y="540" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">outputs: node_ip, grafana_url, prometheus_url</text>
+
+<!-- Ansible -->
+<rect x="252" y="418" width="318" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="252" y="418" width="318" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="252" y="426" width="318" height="10" fill="#1a2e4a"/>
+<text x="411" y="430" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">ANSIBLE</text>
+<text x="262" y="447" font-family="Arial, sans-serif" font-size="7" fill="#64748b">Configuration Management · 22 tasks · ansible/playbooks/setup.yml</text>
+<text x="262" y="460" font-family="Arial, sans-serif" font-size="7" fill="#334155">- apt update + upgrade + install packages</text>
+<text x="262" y="472" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Docker Engine + Compose plugin install</text>
+<text x="262" y="484" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Start + enable Docker as systemd service</text>
+<text x="262" y="496" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Add user to docker group</text>
+<text x="262" y="508" font-family="Arial, sans-serif" font-size="7" fill="#334155">- UFW firewall – 13 port rules + default deny</text>
+<text x="262" y="520" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Clone OmniNode repo + set permissions</text>
+<text x="262" y="532" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Create data dirs (bitcoin/ethereum/lighthouse)</text>
+<text x="262" y="544" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Register omninode.service – auto-starts on reboot</text>
+<rect x="262" y="552" width="298" height="1" fill="#e2e8f0"/>
+<text x="262" y="562" font-family="Arial, sans-serif" font-size="6.5" fill="#64748b">ok=22 changed=15 unreachable=0 failed=0 · idempotent – safe to re-run</text>
+
+<!-- CI/CD + Kubernetes -->
+<rect x="578" y="418" width="386" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="578" y="418" width="386" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="578" y="426" width="386" height="10" fill="#1a2e4a"/>
+<text x="771" y="430" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">CI/CD + KUBERNETES</text>
+<text x="588" y="447" font-family="Arial, sans-serif" font-size="7" fill="#64748b">GitHub Actions · github/workflows/ci.yml · minikube local cluster</text>
+<!-- GitHub Actions sub -->
+<text x="588" y="461" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">GITHUB ACTIONS</text>
+<text x="588" y="474" font-family="Arial, sans-serif" font-size="7" fill="#334155">- lint + validate on PR</text>
+<text x="588" y="486" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Docker Compose config check</text>
+<text x="588" y="498" font-family="Arial, sans-serif" font-size="7" fill="#334155">- terraform validate</text>
+<text x="588" y="510" font-family="Arial, sans-serif" font-size="7" fill="#334155">- ansible-lint playbook</text>
+<text x="588" y="522" font-family="Arial, sans-serif" font-size="7" fill="#334155">- CI green tick on all checks</text>
+<!-- divider -->
+<rect x="748" y="455" width="1" height="108" fill="#e2e8f0"/>
+<!-- Kubernetes sub -->
+<text x="758" y="461" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">KUBERNETES</text>
+<text x="758" y="474" font-family="Arial, sans-serif" font-size="7" fill="#334155">- 8 manifests: bitcoin, geth,</text>
+<text x="758" y="486" font-family="Arial, sans-serif" font-size="7" fill="#334155">  lighthouse, prometheus,</text>
+<text x="758" y="498" font-family="Arial, sans-serif" font-size="7" fill="#334155">  grafana, alertmanager, discord-proxy</text>
+<text x="758" y="510" font-family="Arial, sans-serif" font-size="7" fill="#334155">- minikube local cluster</text>
+<text x="758" y="522" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Deployments + Services + ConfigMaps</text>
+<text x="758" y="558" font-family="Arial, sans-serif" font-size="6" fill="#64748b">JWT: Lighthouse-Geth shared via PVC</text>
+
+<!-- ═══ SECTION 4: CLI / AUTOMATION / WATCHDOG ═══ -->
+<text x="16" y="594" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">CLI · AUTOMATION · WATCHDOG</text>
+<rect x="8" y="600" width="964" height="192" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- CLI Interface -->
+<rect x="16" y="608" width="295" height="162" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="16" y="608" width="295" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="16" y="616" width="295" height="10" fill="#1a2e4a"/>
+<text x="163" y="620" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">CLI INTERFACE</text>
+<text x="26" y="637" font-family="Arial, sans-serif" font-size="7" fill="#64748b">./omninode · Bash wrapper script</text>
+<text x="26" y="651" font-family="Arial, sans-serif" font-size="7" fill="#334155">- start all     – Start full 9-container stack</text>
+<text x="26" y="663" font-family="Arial, sans-serif" font-size="7" fill="#334155">- stop all      – Graceful shutdown all containers</text>
+<text x="26" y="675" font-family="Arial, sans-serif" font-size="7" fill="#334155">- health        – Check all nodes + services</text>
+<text x="26" y="687" font-family="Arial, sans-serif" font-size="7" fill="#334155">- health-watch  – Continuous watchdog mode</text>
+<text x="26" y="699" font-family="Arial, sans-serif" font-size="7" fill="#334155">- resources     – Generate resource limit overrides</text>
+<text x="26" y="711" font-family="Arial, sans-serif" font-size="7" fill="#334155">- logs-export   – Export 30-session log history</text>
+<text x="26" y="723" font-family="Arial, sans-serif" font-size="7" fill="#334155">- backup        – 7-copy state snapshots</text>
+
+<!-- Setup Script -->
+<rect x="319" y="608" width="315" height="162" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="319" y="608" width="315" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="319" y="616" width="315" height="10" fill="#1a2e4a"/>
+<text x="476" y="620" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">SETUP SCRIPT</text>
+<text x="329" y="637" font-family="Arial, sans-serif" font-size="7" fill="#64748b">omni-setup.sh · 16 steps · Auto + Interactive modes</text>
+<text x="329" y="651" font-family="Arial, sans-serif" font-size="7" fill="#334155">1  Check required tools (docker, git, curl, openssl)</text>
+<text x="329" y="663" font-family="Arial, sans-serif" font-size="7" fill="#334155">2  Verify all 13 required ports are free</text>
+<text x="329" y="675" font-family="Arial, sans-serif" font-size="7" fill="#334155">3  Copy .env.example → .env</text>
+<text x="329" y="687" font-family="Arial, sans-serif" font-size="7" fill="#334155">4  Generate JWT secret – docker/lighthouse/data/jwtsecret</text>
+<text x="329" y="699" font-family="Arial, sans-serif" font-size="7" fill="#334155">5  Pull all 9 container images</text>
+<text x="329" y="711" font-family="Arial, sans-serif" font-size="7" fill="#334155">6  Start full stack</text>
+<text x="329" y="723" font-family="Arial, sans-serif" font-size="7" fill="#334155">7  Wait for all containers healthy</text>
+<text x="329" y="735" font-family="Arial, sans-serif" font-size="7" fill="#334155">8  Health check Bitcoin RPC + Ethereum RPC + Lighthouse</text>
+<text x="329" y="747" font-family="Arial, sans-serif" font-size="7" fill="#334155">9  Confirm Prometheus scraping all 4 targets</text>
+<text x="329" y="759" font-family="Arial, sans-serif" font-size="7" fill="#334155">10 Confirm Grafana reachable – print all access URLs</text>
+
+<!-- Health Watchdog + Resource Mgr -->
+<rect x="642" y="608" width="322" height="175" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="642" y="608" width="322" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="642" y="616" width="322" height="10" fill="#1a2e4a"/>
+<text x="803" y="620" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">HEALTH WATCHDOG + RESOURCE MGR</text>
+<text x="652" y="637" font-family="Arial, sans-serif" font-size="7" fill="#64748b">health-watch.py · resource-manager.sh</text>
+<text x="652" y="651" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">HEALTH WATCHDOG</text>
+<text x="652" y="664" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Checks all 9 containers via Docker socket</text>
+<text x="652" y="676" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Queries Bitcoin RPC + Ethereum RPC + Lighthouse</text>
+<text x="652" y="688" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Checks disk usage thresholds</text>
+<text x="652" y="700" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Sends alerts direct to Discord</text>
+<text x="652" y="712" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Last line of defence if Prometheus is down</text>
+<rect x="652" y="720" width="302" height="1" fill="#e2e8f0"/>
+<text x="652" y="733" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">RESOURCE MANAGER – 4 profiles</text>
+<text x="652" y="746" font-family="Arial, sans-serif" font-size="7" fill="#334155">- High (16GB+) · Balanced (8GB)</text>
+<text x="652" y="758" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Conservative (4GB) · Minimal (&lt;4GB)</text>
+<text x="652" y="770" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Auto-merged by Docker Compose on start</text>
+
+<!-- ═══ SECTION 5: PERSISTENT STORAGE / PORT MAP / ALERT RULES ═══ -->
+<text x="16" y="794" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">PERSISTENT STORAGE · NETWORKS · PORTS</text>
+<rect x="8" y="800" width="964" height="168" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- Persistent Storage -->
+<rect x="16" y="808" width="300" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="16" y="808" width="300" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="16" y="816" width="300" height="10" fill="#1a2e4a"/>
+<text x="166" y="820" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">PERSISTENT STORAGE</text>
+<text x="26" y="837" font-family="Arial, sans-serif" font-size="7" fill="#64748b">gitignored · blockchain data survives container restarts</text>
+<text x="26" y="851" font-family="Arial, sans-serif" font-size="7" fill="#334155">- docker/bitcoin/data/    Bitcoin Testnet chaindata</text>
+<text x="26" y="863" font-family="Arial, sans-serif" font-size="7" fill="#334155">- docker/ethereum/data/   Geth Sepolia chaindata</text>
+<text x="26" y="875" font-family="Arial, sans-serif" font-size="7" fill="#334155">- docker/lighthouse/data/ Beacon state + JWT secret</text>
+<text x="26" y="887" font-family="Arial, sans-serif" font-size="7" fill="#334155">- backups/                7-copy state snapshots (gitignored)</text>
+<text x="26" y="899" font-family="Arial, sans-serif" font-size="7" fill="#334155">- monitoring/grafana/     Dashboards – auto-provisioned</text>
+<text x="26" y="911" font-family="Arial, sans-serif" font-size="7" fill="#334155">- logs/                   30-session export retention</text>
+
+<!-- Port Map -->
+<rect x="324" y="808" width="340" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="324" y="808" width="340" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="324" y="816" width="340" height="10" fill="#1a2e4a"/>
+<text x="494" y="820" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">PORT MAP — 13 PORTS</text>
+<text x="334" y="837" font-family="Arial, sans-serif" font-size="7" fill="#64748b">All sourced from .env · No hardcoded values in docker-compose.yml</text>
+<text x="334" y="851" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :8332  Bitcoin RPC      · :8333 Bitcoin P2P    · :28332 Bitcoin ZMQ</text>
+<text x="334" y="863" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :9332  Bitcoin Exporter  · :9100 Node Exporter</text>
+<text x="334" y="875" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :8545  Geth RPC          · :8546 Geth WebSocket · :30303 Ethereum P2P</text>
+<text x="334" y="887" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :5052  Lighthouse HTTP API</text>
+<text x="334" y="899" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :9090  Prometheus        · :3000 Grafana</text>
+<text x="334" y="911" font-family="Arial, sans-serif" font-size="7" fill="#334155">- :9093  Alertmanager      · :9094 Discord Proxy</text>
+
+<!-- Alert Rules -->
+<rect x="672" y="808" width="292" height="152" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="1"/>
+<rect x="672" y="808" width="292" height="18" rx="4" fill="#1a2e4a"/>
+<rect x="672" y="816" width="292" height="10" fill="#1a2e4a"/>
+<text x="818" y="820" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff" text-anchor="middle">ALERT RULES — 6 CONFIGURED</text>
+<text x="682" y="838" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">BitcoinNodeDown</text>
+<text x="682" y="850" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Bitcoin RPC unreachable · Severity: critical · Wait: 2m</text>
+<text x="682" y="864" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">EthereumNodeDown</text>
+<text x="682" y="876" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Geth RPC unreachable · Severity: critical · Wait: 2m</text>
+<text x="682" y="890" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">LighthouseDown · BitcoinSyncStalled</text>
+<text x="682" y="902" font-family="Arial, sans-serif" font-size="7" fill="#334155">- Beacon API unreachable / Block height unchanged · Wait: 2m / 10m</text>
+<text x="682" y="916" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a">LowPeerCount · HighDiskUsage</text>
+<text x="682" y="928" font-family="Arial, sans-serif" font-size="7" fill="#334155">- &lt;3 peers connected / Disk usage &gt;85% · Severity: warning / critical</text>
+
+<!-- ═══ SECTION 6: MONITORING FLOW ═══ -->
+<text x="16" y="984" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#64748b" letter-spacing="1.5">MONITORING FLOW — END TO END</text>
+<rect x="8" y="990" width="964" height="70" rx="5" fill="#f8faff" stroke="#1a2e4a" stroke-width="0.8"/>
+
+<!-- Flow boxes -->
+<rect x="20" y="1004" width="100" height="40" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="70" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a" text-anchor="middle">BITCOIN</text>
+<text x="70" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#475569" text-anchor="middle">EXPORTER</text>
+<line x1="120" y1="1024" x2="150" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="150" y="1004" width="100" height="40" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="200" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a" text-anchor="middle">GETH</text>
+<text x="200" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#475569" text-anchor="middle">METRICS</text>
+<line x1="250" y1="1024" x2="280" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="280" y="1004" width="100" height="40" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="330" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a" text-anchor="middle">LIGHTHOUSE</text>
+<text x="330" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#475569" text-anchor="middle">METRICS</text>
+<line x1="380" y1="1024" x2="410" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="410" y="1004" width="100" height="40" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="460" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a" text-anchor="middle">NODE</text>
+<text x="460" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#475569" text-anchor="middle">EXPORTER</text>
+<line x1="510" y1="1024" x2="540" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="540" y="1004" width="100" height="40" rx="4" fill="#1a2e4a" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="590" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#ffffff" text-anchor="middle">PROMETHEUS</text>
+<text x="590" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#93c5fd" text-anchor="middle">scrapes all</text>
+<line x1="640" y1="1024" x2="670" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="670" y="1004" width="100" height="40" rx="4" fill="#1a2e4a" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="720" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#ffffff" text-anchor="middle">ALERTMANAGER</text>
+<text x="720" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#93c5fd" text-anchor="middle">fires alerts</text>
+<line x1="770" y1="1024" x2="800" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="800" y="1004" width="80" height="40" rx="4" fill="#ffffff" stroke="#1a2e4a" stroke-width="0.8"/>
+<text x="840" y="1020" font-family="Arial, sans-serif" font-size="7.5" font-weight="700" fill="#1a2e4a" text-anchor="middle">DISCORD</text>
+<text x="840" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#475569" text-anchor="middle">PROXY</text>
+<line x1="880" y1="1024" x2="900" y2="1024" stroke="#1a2e4a" stroke-width="0.7" marker-end="url(#arr)"/>
+
+<rect x="900" y="1004" width="62" height="40" rx="4" fill="#15803d" stroke="#15803d" stroke-width="0.8"/>
+<text x="931" y="1020" font-family="Arial, sans-serif" font-size="7" font-weight="700" fill="#ffffff" text-anchor="middle">DISCORD</text>
+<text x="931" y="1033" font-family="Arial, sans-serif" font-size="7" fill="#bbf7d0" text-anchor="middle">ALERT</text>
+
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#1a2e4a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- FOOTER -->
+<line x1="0" y1="1072" x2="980" y2="1072" stroke="#e2e8f0" stroke-width="0.5"/>
+<rect x="0" y="1072" width="980" height="28" fill="#f8fafc"/>
+<text x="490" y="1090" font-family="Arial, sans-serif" font-size="8" fill="#64748b" text-anchor="middle">Bitcoin Core · Geth · Lighthouse · Docker · Prometheus · Grafana · Alertmanager · Terraform · Ansible · Kubernetes · GitHub Actions</text>
+<text x="964" y="1090" font-family="Arial, sans-serif" font-size="8" fill="#94a3b8" text-anchor="end">apu-saha-990 · Project 02</text>
+</svg>
