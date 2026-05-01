@@ -249,4 +249,3 @@ omninode-infrastructure/
 
 ---
 
-*Career changer from manufacturing. Learning in public. Building real things.*
