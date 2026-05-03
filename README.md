@@ -91,7 +91,7 @@ The lesson: when something fails with no useful error message, the software is p
 
 ## How I Built This
 
-I came from a factory and manufacturing background. No CS degree. No bootcamp.
+I came from a factory and manufacturing background.
 
 I use AI (Claude) throughout development — as a learning tool, code reviewer, and debugging partner. Every error message went back to Claude. The decisions are mine — what to build, how to structure it, what broke, what I changed.
 
